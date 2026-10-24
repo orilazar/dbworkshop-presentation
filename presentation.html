@@ -1839,11 +1839,21 @@ video {
           </div>
         </div>
 
-        <!-- The exact requested text in a premium typography box -->
-        <div class="p-6 rounded-2xl bg-gradient-to-br from-indigo-50/70 via-white to-violet-50/70 border border-indigo-200 shadow-inner">
-          <p class="text-sm sm:text-base text-gray-800 leading-relaxed font-medium text-justify">
-            אלגוריתם Apriori מיועד לגילוי חוקי אסוציאציה וקשרים בין מילים, כאשר במערכת שלנו כל משפט מוגדר כטרנזקציה עצמאית (סל מילים). האלגוריתם מתבסס על שני מדדים מרכזיים: תמיכה (Support) – מוגדרת כאחוז המשפטים שבהם שתי המילים A ו-B מופיעות יחד (מדד לשכיחות הצירוף), וביטחון (Confidence) – מוגדר כהסתברות המותנית להופעת מילה B בהינתן שמילה A קיימת במשפט, כלומר מספר המשפטים המשותפים חלקי סך המשפטים שבהם הופיעה מילה A. פעולת האלגוריתם מתבצעת תמיד בשני שלבים עוקבים: קודם כל מציאת התמיכה, ורק לאחר מכן חישוב הביטחון. בשלב הראשון, האלגוריתם סורק את המשפטים בעזרת שאילתת JOIN על טבלת מופעי המילים עם תנאי לאותו sentence_number, סופר את מספר המשפטים המשותפים לכל זוג מילים, ומסנן החוצה כל זוג שלא מגיע לסף התמיכה המינימלי (min_support) בהתאם לעקרון האפריורי לפיו תת-קבוצה שאינה שכיחה לא תיצור צירוף שכיח. בשלב השני, אך ורק עבור הזוגות השכיחים שעברו את הסינון, האלגוריתם מחשב את הביטחון באמצעות חלוקת התמיכה המשותפת בכמות הופעותיה של מילה A, ומסנן את אלו שלא עמדו בסף הביטחון (min_confidence). בקובץ mining_dao.py, הפונקציה run_apriori_query מבצעת את השלב הראשון של חישוב התמיכה והסינון לפי משפט, הפונקציה compute_confidence מבצעת את השלב השני של חישוב הביטחון לזוגות שנמצאו, ולבסוף save_mining_results שומרת במסד הנתונים את החוקים המובהקים שעמדו בשני הספים.
+        <!-- Concise Apriori Overview Box -->
+        <div class="p-6 rounded-2xl bg-gradient-to-br from-indigo-50/70 via-white to-violet-50/70 border border-indigo-200 shadow-inner space-y-3">
+          <p class="text-sm sm:text-base text-gray-800 leading-relaxed font-medium">
+            אלגוריתם <span class="en-sans font-bold text-[#4338ca]">Apriori</span> מגלה חוקי אסוציאציה בין מילים, כאשר כל משפט מוגדר כטרנזקציה עצמאית (סל מילים). התהליך פועל בשני שלבים עוקבים המבוססים על שני מדדי מפתח:
           </p>
+          <div class="space-y-2 text-xs sm:text-sm text-gray-700 leading-relaxed">
+            <div class="flex items-start gap-2">
+              <span class="font-extrabold text-[#4338ca] shrink-0 mt-0.5">• תמיכה (Support):</span>
+              <span>אחוז המשפטים שבהם המילים A ו-B מופיעות יחד. בשלב הראשון, הפונקציה <code class="bg-indigo-50 border border-indigo-200 px-1.5 py-0.5 rounded text-xs text-[#4338ca]">run_apriori_query</code> מבצעת <span class="en-sans font-bold">Self-Join</span> על <code class="bg-indigo-50 border border-indigo-200 px-1.5 py-0.5 rounded text-xs text-[#4338ca]">WordOccurrences</code> לפי משפט, ומסננת צירופים מתחת לסף התמיכה (<span class="en-sans font-bold">min_support</span>).</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="font-extrabold text-violet-700 shrink-0 mt-0.5">• ביטחון (Confidence):</span>
+              <span>ההסתברות המותנית להופעת מילה B בהינתן מילה A (התמיכה המשותפת חלקי סך מופעי מילה A). בשלב השני, הפונקציה <code class="bg-violet-50 border border-violet-200 px-1.5 py-0.5 rounded text-xs text-violet-700">compute_confidence</code> מחשבת את הביטחון ומסננת לפי <span class="en-sans font-bold">min_confidence</span>, ולבסוף <code class="bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded text-xs text-emerald-700">save_mining_results</code> שומרת את החוקים המובהקים במסד הנתונים.</span>
+            </div>
+          </div>
         </div>
 
         <!-- Visual 2-Step Architecture Diagram -->
