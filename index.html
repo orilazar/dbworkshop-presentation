@@ -1943,13 +1943,6 @@ video {
               <span class="text-xs font-mono px-2 py-0.5 rounded bg-emerald-100 text-emerald-700 font-bold">Deduplication</span>
             </div>
           </button>
-
-          <button onclick="selectChallenge(5)" data-ch-btn="5" class="ch-btn wow-card w-full text-right p-3.5 rounded-2xl border border-gray-200 bg-white cursor-pointer">
-            <div class="flex items-center justify-between">
-              <span class="font-bold text-sm text-gray-900">6. טיפול בטיפוסי <code class="text-xs">CLOB</code> ומחיקת <code class="text-xs">CASCADE</code></span>
-              <span class="text-xs font-mono px-2 py-0.5 rounded bg-rose-100 text-rose-700 font-bold">CLOB / FK</span>
-            </div>
-          </button>
         </div>
 
         <!-- Challenge Details Card -->
@@ -2011,7 +2004,7 @@ video {
       }
     });
 
-    // 6 Engineering & Database Challenges
+    // 5 Engineering & Database Challenges
     const challengesData = [
       {
         badge: '01 · ORA-01795 & Batching',
@@ -2107,18 +2100,6 @@ for occurrence in occurrences:
     if key not in seen_lines:
         seen_lines.add(key)
         unique_occurrences.append(occurrence)`
-      },
-      {
-        badge: '06 · CLOB & Referential Integrity',
-        title: 'ניהול שדות CLOB ומחיקה מדורגת (ON DELETE CASCADE) ב-7 טבלאות',
-        problem: 'עמודת תיאור הקבוצה ב-WordGroups היא CLOB (המוחזרת כ-LOB Locator שלא ניתן להסב ל-JSON ישירות), ומחיקת שיר מחייבת סילוק עקבי של רשומות מ-7 טבלאות שונות (מחברים, מלחינים, מבצעים, מופעי מילים, ביטויים ותוצאות כרייה).',
-        solution: 'הגדרת oracledb.defaults.fetch_lobs = False לשליפה אוטומטית של CLOB כמחרוזות str, והגדרת כל מפתחות הזרים בסכמה עם ON DELETE CASCADE. פקודת DELETE בודדת על Documents מנקה באופן אטומי את כל הרשומות התלויות.',
-        impact: 'אפס זליגת נתונים, אפס רשומות יתומות, וקוד backend אלגנטי ללא צורך במחיקות ידניות מרובות.',
-        code: `// backend/db.py & db-scripts/create_schema.sql
-oracledb.defaults.fetch_lobs = False
-
--- DDL Constraint
-FOREIGN KEY (document_id) REFERENCES Documents(document_id) ON DELETE CASCADE`
       }
     ];
 
