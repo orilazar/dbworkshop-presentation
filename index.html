@@ -1918,21 +1918,14 @@ video {
 
           <button onclick="selectChallenge(1)" data-ch-btn="1" class="ch-btn wow-card w-full text-right p-3.5 rounded-2xl border border-gray-200 bg-white cursor-pointer">
             <div class="flex items-center justify-between">
-              <span class="font-bold text-sm text-gray-900">2. חיפוש ביטויים ללא טקסט גולמי</span>
-              <span class="text-xs font-mono px-2 py-0.5 rounded bg-violet-100 text-violet-700 font-bold">NOT EXISTS</span>
+              <span class="font-bold text-sm text-gray-900">2. ביצועי כריית מידע (<span class="en-sans">Apriori Self-Join</span>)</span>
+              <span class="text-xs font-mono px-2 py-0.5 rounded bg-amber-100 text-amber-700 font-bold">Self-Join &lt;</span>
             </div>
           </button>
 
           <button onclick="selectChallenge(2)" data-ch-btn="2" class="ch-btn wow-card w-full text-right p-3.5 rounded-2xl border border-gray-200 bg-white cursor-pointer">
             <div class="flex items-center justify-between">
-              <span class="font-bold text-sm text-gray-900">3. ביצועי כריית מידע (<span class="en-sans">Apriori Self-Join</span>)</span>
-              <span class="text-xs font-mono px-2 py-0.5 rounded bg-amber-100 text-amber-700 font-bold">Self-Join &lt;</span>
-            </div>
-          </button>
-
-          <button onclick="selectChallenge(3)" data-ch-btn="3" class="ch-btn wow-card w-full text-right p-3.5 rounded-2xl border border-gray-200 bg-white cursor-pointer">
-            <div class="flex items-center justify-between">
-              <span class="font-bold text-sm text-gray-900">4. מספור שורות <span class="en-sans">Relative vs. Absolute</span></span>
+              <span class="font-bold text-sm text-gray-900">3. מספור שורות <span class="en-sans">Relative vs. Absolute</span></span>
               <span class="text-xs font-mono px-2 py-0.5 rounded bg-blue-100 text-blue-700 font-bold">DENSE_RANK</span>
             </div>
           </button>
@@ -1997,7 +1990,7 @@ video {
       }
     });
 
-    // 4 Engineering & Database Challenges
+    // 3 Engineering & Database Challenges
     const challengesData = [
       {
         badge: '01 · ORA-01795 & Batching',
@@ -2016,29 +2009,7 @@ for i in range(0, len(text_list), batch_size):
     )`
       },
       {
-        badge: '02 · Relational Division',
-        title: 'חיפוש ביטויים מרובי־מילים ללא שמירת הטקסט הגולמי ב-DB',
-        problem: 'המערכת אינה שומרת מחרוזות טקסט של שירים ב-DB כדי למנוע כפילויות, אלא רק מופעי מילים בודדות. כיצד מאתרים ביטוי בן N מילים רצופות בשאילתת SQL יעילה אחת ללא full-text scan?',
-        solution: 'שימוש ב-Relational Division (חילוק יחסים) באמצעות שלילה כפולה (Double NOT EXISTS) על ציר global_position: מוצאים את המילה הראשונה בביטוי, ומוודאים שלא קיימת מילה בהמשך הביטוי שלא קיימת עבורה רשומה עוקבת בהיסט המדויק (start_pos + position). התוצאות נשמרות ב-Materialized Cache (טבלת ExpressionOccurrences).',
-        impact: 'איתור ביטויים בכל אורך במסד נתונים עצום בזמן תגובה מיידי וברמת שפת SQL טהורה.',
-        code: `// backend/dao/expression_dao.py
-SELECT wo_first.document_id, wo_first.global_position AS start_pos
-FROM ExpressionWords ew_first
-JOIN WordOccurrences wo_first ON wo_first.word_id = ew_first.word_id
-WHERE ew_first.expression_id = :1 AND ew_first.position = 0
-  AND NOT EXISTS (
-      SELECT 1 FROM ExpressionWords ew2
-      WHERE ew2.expression_id = ew_first.expression_id AND ew2.position > 0
-        AND NOT EXISTS (
-            SELECT 1 FROM WordOccurrences wo2
-            WHERE wo2.word_id = ew2.word_id
-              AND wo2.document_id = wo_first.document_id
-              AND wo2.global_position = wo_first.global_position + ew2.position
-        )
-  )`
-      },
-      {
-        badge: '03 · Data Mining & Query Optimization',
+        badge: '02 · Data Mining & Query Optimization',
         title: 'ביצועי כריית מידע (Apriori): מניעת פיצוץ קומבינטורי בעזרת Self-Join קנוני',
         problem: 'באלגוריתם Apriori, מציאת זוגות מילים המופיעות יחד באותו משפט דורשת הצלבה של מאות ואלפי מופעים. הצלבה נאיבית מייצרת זוגות זהים של אותה מילה (A, A) וכפילויות סימטריות (A, B) ו-(B, A), מה שגורם להכפלת זמן החישוב והזיכרון ב-Oracle פי 2 ויותר.',
         solution: 'בשאילתת run_apriori_query הוטמע Self-Join מותנה: wo1.word_id < wo2.word_id. תנאי ה-Inequality שובר את הסימטריה ברמת ה-Execution Plan של Oracle, מונע מראש זוגות רפלקסיביים, ומחזיר כל זוג מילים פעם אחת בלבד. התמיכה נספרת בעזרת COUNT(DISTINCT document_id || \'-\' || sentence_number) ומסוננת ישירות ב-HAVING.',
@@ -2059,7 +2030,7 @@ HAVING COUNT(DISTINCT (wo1.document_id || '-' || wo1.sentence_number)) >= :thres
 ORDER BY support_count DESC`
       },
       {
-        badge: '04 · Analytic Window Functions',
+        badge: '03 · Analytic Window Functions',
         title: 'מספור שורות יחסי (בתוך בית) מול מוחלט (בקובץ) באמצעות DENSE_RANK',
         problem: 'בטבלת WordOccurrences נשמר line_number מוחלט עבור כל השיר. עם זאת, באינדקס המבני ובחיפוש הפוך (Reverse Lookup) המשתמש מבקש לאתר שורה יחסית בתוך בית ספציפי (למשל: "בית 2, שורה 3"), שאינה תואמת למספר השורה הפיזי בקובץ.',
         solution: 'שימוש בפונקציית חלון אנליטית של Oracle: DENSE_RANK() OVER (PARTITION BY verse_number ORDER BY line_number). בחיפוש הפוך ה-DAO מאתר את השורות הפיזיות של הבית וממפה ביניהן לבין האינדקס היחסי שנמסר מהמשתמש.',
