@@ -1936,13 +1936,6 @@ video {
               <span class="text-xs font-mono px-2 py-0.5 rounded bg-blue-100 text-blue-700 font-bold">DENSE_RANK</span>
             </div>
           </button>
-
-          <button onclick="selectChallenge(4)" data-ch-btn="4" class="ch-btn wow-card w-full text-right p-3.5 rounded-2xl border border-gray-200 bg-white cursor-pointer">
-            <div class="flex items-center justify-between">
-              <span class="font-bold text-sm text-gray-900">5. איחוד מופעים מרובים באותה שורה</span>
-              <span class="text-xs font-mono px-2 py-0.5 rounded bg-emerald-100 text-emerald-700 font-bold">Deduplication</span>
-            </div>
-          </button>
         </div>
 
         <!-- Challenge Details Card -->
@@ -2004,7 +1997,7 @@ video {
       }
     });
 
-    // 5 Engineering & Database Challenges
+    // 4 Engineering & Database Challenges
     const challengesData = [
       {
         badge: '01 · ORA-01795 & Batching',
@@ -2085,21 +2078,6 @@ FROM Words w
 JOIN WordOccurrences wo ON w.word_id = wo.word_id
 WHERE wo.document_id = :1
 ORDER BY w.word_text, wo.verse_number, wo.line_number`
-      },
-      {
-        badge: '05 · Line Deduplication',
-        title: 'איחוד מופעים מרובים של אותה מילה באותה שורה בקונקורדנציה',
-        problem: 'כאשר מילה מופיעה מספר פעמים באותה שורה (למשל: "Let it be, let it be"), נוצרות רשומות מרובות ב-WordOccurrences. הצגת כל רשומה כתוצאת קונקורדנציה נפרדת מייצרת כפילות שורות מעיקה עבור המשתמש.',
-        solution: 'אלגוריתם Deduplication ברמת השירות לפי מפתח ייחודי (document_id, line_number): המערכת מאחדת מופעים מאותה שורה לכרטיסייה אחת, אך שומרת את כל מספרי ה-positions_in_line כדי לסמן ולהדגיש את כל המופעים בשורה בו-זמנית.',
-        impact: 'תצוגת קונקורדנציה נקייה ומקצועית ללא כפילויות, תוך הדגשה מלאה של כל מופעי המילה.',
-        code: `// backend/services/concordance_service.py
-unique_occurrences = []
-seen_lines = set()
-for occurrence in occurrences:
-    key = (occurrence.get("document_id"), occurrence.get("line_number"))
-    if key not in seen_lines:
-        seen_lines.add(key)
-        unique_occurrences.append(occurrence)`
       }
     ];
 
